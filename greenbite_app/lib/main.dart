@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:greenbite_app/screens/login_and_register/welcome_screen.dart';
-
+// import 'package:greenbite_app/screens/login_and_register/welcome_screen.dart';
+import 'package:greenbite_app/rewards/rewards_screen.dart';
 void main() {
   runApp(const MyApp());
 }
@@ -20,7 +20,8 @@ class MyApp extends StatelessWidget {
           primary: const Color(0xFF18542A),
         ),
       ),
-      home: const WelcomeScreen(),
+      // home: const WelcomeScreen(),
+      home: const RewardsScreen(),
     );
   }
 }
