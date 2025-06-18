@@ -2,6 +2,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:greenbite_app/components/RecipePostCard.dart';
+import 'package:greenbite_app/screens/accounts/edit_profile_info.dart';
+
 
 class AccountPage extends StatefulWidget {
   const AccountPage({super.key});
@@ -91,8 +93,14 @@ class _AccountPageState extends State<AccountPage> {
                 OutlinedButton.icon(
                   icon: const Icon(Icons.edit),
                   label: const Text("Edit profile"),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const EditProfileInfo()),
+                    );
+                  },
                 ),
+
               ],
             ),
             const Divider(height: 24),
