@@ -16,7 +16,7 @@ class RecipePostCard extends StatefulWidget {
     required this.description,
     this.imageFile,
     this.imageUrl,
-    this.likes = 0,
+    this.likes = 0, required void Function(dynamic text) onComment, required void Function() onLike,
   });
 
   @override
