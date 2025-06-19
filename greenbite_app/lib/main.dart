@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 // import 'package:greenbite_app/screens/login_and_register/welcome_screen.dart';
 // import 'package:greenbite_app/screens/about_us/about_us.dart';
-import 'package:greenbite_app/screens/privacypolicy/privacy_policy.dart';
+// import 'package:greenbite_app/screens/privacypolicy/privacy_policy.dart';
+import 'package:greenbite_app/components/popup/menu.dart';
 
 void main() {
   runApp(const MyApp());
@@ -24,7 +25,8 @@ class MyApp extends StatelessWidget {
       ),
       // home: const WelcomeScreen(),
       // home: const AboutUsPage(),
-      home: const PrivacyPolicyPage(),
+      // home: const PrivacyPolicyPage(),
+      home: const SettingsPopup(),
     );
   }
   
