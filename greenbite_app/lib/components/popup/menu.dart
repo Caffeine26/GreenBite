@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class SettingsPopup extends StatelessWidget {
-  const SettingsPopup({super.key});
+class MenuPopup extends StatelessWidget {
+  const MenuPopup({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -99,7 +99,7 @@ class ExampleUsage extends StatelessWidget {
           Positioned(
             right: 16,
             top: kToolbarHeight + 10,
-            child: const SettingsPopup(),
+            child: const MenuPopup(),
           ),
         ],
       ),

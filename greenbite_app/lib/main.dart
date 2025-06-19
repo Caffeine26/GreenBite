@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
       // home: const WelcomeScreen(),
       // home: const AboutUsPage(),
       // home: const PrivacyPolicyPage(),
-      home: const SettingsPopup(),
+      home: const MenuPopup(),
     );
   }
   
