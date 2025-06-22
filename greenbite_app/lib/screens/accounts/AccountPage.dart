@@ -116,7 +116,7 @@ class _AccountPageState extends State<AccountPage> {
               description:
                   "Bay Kork Veggies Fried Rice\nA quick and tasty way to use leftover veggies and shrimp",
               imageUrl: 'assets/images/fried-rice.jpg',
-              likes: 3,
+              likes: 3, onShare: () {  },
             ),
             RecipePostCard(
               username: "KiKi",
@@ -124,7 +124,7 @@ class _AccountPageState extends State<AccountPage> {
               description:
                   "Look what I made for my family today! Very delicious\n#leftover #creative #nofoodwaste",
               imageUrl: 'assets/images/fried-chicken.jpg',
-              likes: 9,
+              likes: 9, onShare: () {  },
             ),
             if (_pickedImageBytes != null)
               RecipePostCard(
@@ -132,7 +132,7 @@ class _AccountPageState extends State<AccountPage> {
                 date: "Today",
                 description: "My new recipe upload!",
                 imageBytes: _pickedImageBytes,
-                likes: 0,
+                likes: 0, onShare: () {  },
               ),
           ],
         ),

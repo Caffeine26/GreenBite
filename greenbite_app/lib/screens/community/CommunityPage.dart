@@ -2,6 +2,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:greenbite_app/components/RecipePostCard.dart';
+import 'package:greenbite_app/components/SharePopup.dart';
 
 class CommunityPage extends StatefulWidget {
   const CommunityPage({super.key});
@@ -68,6 +69,15 @@ class _CommunityPageState extends State<CommunityPage> {
       _descriptionController.clear();
       _pickedImageBytes = null;
     });
+  }
+
+  void _showSharePopup(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return const SharePopup();
+      },
+    );
   }
 
   @override
@@ -207,6 +217,7 @@ class _CommunityPageState extends State<CommunityPage> {
                         post['comments'].add(text);
                       });
                     },
+                    onShare: () => _showSharePopup(context),
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8),

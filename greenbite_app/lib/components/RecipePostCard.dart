@@ -1,14 +1,13 @@
 import 'dart:typed_data';
-import 'dart:io';
 import 'package:flutter/material.dart';
+import 'SharePopup.dart'; // import SharePopup
 
 class RecipePostCard extends StatefulWidget {
   final String username;
   final String date;
   final String description;
-  final Uint8List? imageBytes; // For web/mobile compatibility
-  final String? imageUrl; // Optional fallback
-  final File? imageFile; // New: For image picked from file
+  final Uint8List? imageBytes;
+  final String? imageUrl;
   final int likes;
   final void Function()? onLike;
   final void Function(String text)? onComment;
@@ -20,10 +19,9 @@ class RecipePostCard extends StatefulWidget {
     required this.description,
     this.imageBytes,
     this.imageUrl,
-    this.imageFile,
     this.likes = 0,
     this.onLike,
-    this.onComment,
+    this.onComment, required void Function() onShare,
   });
 
   @override
@@ -43,17 +41,37 @@ class _RecipePostCardState extends State<RecipePostCard> {
     setState(() {
       _likes++;
     });
-    widget.onLike?.call(); // notify parent if provided
+    widget.onLike?.call();
+  }
+
+  void _showSharePopup(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => const SharePopup(),
+    );
   }
 
   Widget _buildImage() {
     const double imageHeight = 200;
+
     if (widget.imageBytes != null) {
-      return _styledImage(Image.memory(widget.imageBytes!, fit: BoxFit.cover, width: double.infinity, height: imageHeight));
-    } else if (widget.imageFile != null) {
-      return _styledImage(Image.file(widget.imageFile!, fit: BoxFit.cover, width: double.infinity, height: imageHeight));
+      return _styledImage(
+        Image.memory(
+          widget.imageBytes!,
+          fit: BoxFit.cover,
+          width: double.infinity,
+          height: imageHeight,
+        ),
+      );
     } else if (widget.imageUrl != null) {
-      return _styledImage(Image.asset(widget.imageUrl!, fit: BoxFit.cover, width: double.infinity, height: imageHeight));
+      return _styledImage(
+        Image.asset(
+          widget.imageUrl!,
+          fit: BoxFit.cover,
+          width: double.infinity,
+          height: imageHeight,
+        ),
+      );
     } else {
       return const SizedBox.shrink();
     }
@@ -115,12 +133,15 @@ class _RecipePostCardState extends State<RecipePostCard> {
                     Text("Comment"),
                   ],
                 ),
-                Row(
-                  children: const [
-                    Icon(Icons.share_outlined, size: 20),
-                    SizedBox(width: 4),
-                    Text("Share"),
-                  ],
+                GestureDetector(
+                  onTap: () => _showSharePopup(context), // triggers the popup
+                  child: Row(
+                    children: const [
+                      Icon(Icons.share_outlined, size: 20),
+                      SizedBox(width: 4),
+                      Text("Share"),
+                    ],
+                  ),
                 ),
               ],
             ),
