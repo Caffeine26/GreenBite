@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 // import 'package:greenbite_app/screens/login_and_register/welcome_screen.dart';
-// import 'package:greenbite_app/screens/accounts/AccountPage.dart';
-import 'package:greenbite_app/screens/community/CommunityPage.dart';
+import 'package:greenbite_app/screens/accounts/AccountPage.dart';
+// import 'package:greenbite_app/screens/community/CommunityPage.dart';
 
 
 void main() {
@@ -24,8 +24,8 @@ class MyApp extends StatelessWidget {
         ),
       ),
       // home: const WelcomeScreen(),
-      // home: const AccountPage(),
-      home: const CommunityPage(),
+      home: const AccountPage(),
+      // home: const CommunityPage(),
     );
   }
 }

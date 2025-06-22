@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:greenbite_app/components/RecipePostCard.dart';
@@ -12,14 +12,13 @@ class CommunityPage extends StatefulWidget {
 
 class _CommunityPageState extends State<CommunityPage> {
   final TextEditingController _descriptionController = TextEditingController();
-  File? _pickedImage;
+  Uint8List? _pickedImageBytes;
 
-  List<Map<String, dynamic>> _posts = [
+  final List<Map<String, dynamic>> _posts = [
     {
       'username': 'KiKi',
       'date': 'today 8h ago',
-      'description':
-          "Bay Kork Veggies Fried Rice\nA quick and tasty way to use leftover veggies and shrimp",
+      'description': "Bay Kork Veggies Fried Rice\nA quick and tasty way to use leftover veggies and shrimp",
       'imageUrl': 'assets/images/fried-rice.jpg',
       'likes': 3,
       'comments': []
@@ -27,8 +26,7 @@ class _CommunityPageState extends State<CommunityPage> {
     {
       'username': 'KiKi',
       'date': '19 June',
-      'description':
-          "Look what I made for my family today! Very delicious\n#leftover #creative #nofoodwaste",
+      'description': "Look what I made for my family today! Very delicious\n#leftover #creative #nofoodwaste",
       'imageUrl': 'assets/images/fried-chicken.jpg',
       'likes': 9,
       'comments': []
@@ -38,8 +36,9 @@ class _CommunityPageState extends State<CommunityPage> {
   Future<void> _pickImage() async {
     final picked = await ImagePicker().pickImage(source: ImageSource.gallery);
     if (picked != null) {
+      final bytes = await picked.readAsBytes();
       setState(() {
-        _pickedImage = File(picked.path);
+        _pickedImageBytes = bytes;
       });
     }
   }
@@ -47,26 +46,27 @@ class _CommunityPageState extends State<CommunityPage> {
   void _cancelPost() {
     setState(() {
       _descriptionController.clear();
-      _pickedImage = null;
+      _pickedImageBytes = null;
     });
   }
 
   void _submitPost() {
-    if (_descriptionController.text.isEmpty && _pickedImage == null) return;
+    if (_descriptionController.text.isEmpty && _pickedImageBytes == null) return;
 
     setState(() {
       _posts.insert(0, {
         'username': 'KiKi',
         'date': 'Today',
-        'description': _descriptionController.text.isEmpty
+        'description': _descriptionController.text.trim().isEmpty
             ? "My new recipe upload!"
-            : _descriptionController.text,
-        'image': _pickedImage,
+            : _descriptionController.text.trim(),
+        'imageBytes': _pickedImageBytes,
         'likes': 0,
         'comments': []
       });
+
       _descriptionController.clear();
-      _pickedImage = null;
+      _pickedImageBytes = null;
     });
   }
 
@@ -88,7 +88,7 @@ class _CommunityPageState extends State<CommunityPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Post Input Section (without white container)
+            // Post input area
             Padding(
               padding: const EdgeInsets.only(top: 12),
               child: Row(
@@ -104,8 +104,7 @@ class _CommunityPageState extends State<CommunityPage> {
                       children: [
                         const Text(
                           "What's your recipes today, KiKi?",
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w500),
+                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                         ),
                         const SizedBox(height: 8),
                         Container(
@@ -133,8 +132,7 @@ class _CommunityPageState extends State<CommunityPage> {
                             backgroundColor: Colors.green.shade50,
                             foregroundColor: Colors.black,
                             elevation: 0,
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 16, vertical: 12),
+                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
@@ -159,8 +157,7 @@ class _CommunityPageState extends State<CommunityPage> {
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.green,
                                 foregroundColor: Colors.white,
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 24),
+                                padding: const EdgeInsets.symmetric(horizontal: 24),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(24),
                                 ),
@@ -176,18 +173,18 @@ class _CommunityPageState extends State<CommunityPage> {
             ),
 
             // Preview selected image
-            if (_pickedImage != null)
+            if (_pickedImageBytes != null)
               Padding(
                 padding: const EdgeInsets.only(top: 12),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(8),
-                  child: Image.file(_pickedImage!, height: 150),
+                  child: Image.memory(_pickedImageBytes!, height: 150),
                 ),
               ),
 
             const Divider(thickness: 1, height: 30),
 
-            // Post Feed
+            // Posts list
             ..._posts.map((post) {
               final commentController = TextEditingController();
               return Column(
@@ -197,7 +194,7 @@ class _CommunityPageState extends State<CommunityPage> {
                     username: post['username'],
                     date: post['date'],
                     description: post['description'],
-                    imageFile: post['image'],
+                    imageBytes: post['imageBytes'],
                     imageUrl: post['imageUrl'],
                     likes: post['likes'],
                     onLike: () {
@@ -212,15 +209,13 @@ class _CommunityPageState extends State<CommunityPage> {
                     },
                   ),
                   Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8),
+                    padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const CircleAvatar(
                           radius: 18,
-                          backgroundImage:
-                              AssetImage('assets/images/profile.png'),
+                          backgroundImage: AssetImage('assets/images/profile.png'),
                         ),
                         const SizedBox(width: 8),
                         Expanded(
@@ -230,12 +225,10 @@ class _CommunityPageState extends State<CommunityPage> {
                               hintText: "Comment as KiKi",
                               filled: true,
                               fillColor: Colors.grey[100],
-                              contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 12, vertical: 8),
+                              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20),
-                                borderSide:
-                                    BorderSide(color: Colors.grey.shade300),
+                                borderSide: BorderSide(color: Colors.grey.shade300),
                               ),
                             ),
                           ),

@@ -1,3 +1,4 @@
+import 'dart:typed_data';
 import 'dart:io';
 import 'package:flutter/material.dart';
 
@@ -5,18 +6,24 @@ class RecipePostCard extends StatefulWidget {
   final String username;
   final String date;
   final String description;
-  final File? imageFile;
-  final String? imageUrl;
+  final Uint8List? imageBytes; // For web/mobile compatibility
+  final String? imageUrl; // Optional fallback
+  final File? imageFile; // New: For image picked from file
   final int likes;
+  final void Function()? onLike;
+  final void Function(String text)? onComment;
 
   const RecipePostCard({
     super.key,
     required this.username,
     required this.date,
     required this.description,
-    this.imageFile,
+    this.imageBytes,
     this.imageUrl,
-    this.likes = 0, required void Function(dynamic text) onComment, required void Function() onLike,
+    this.imageFile,
+    this.likes = 0,
+    this.onLike,
+    this.onComment,
   });
 
   @override
@@ -36,6 +43,27 @@ class _RecipePostCardState extends State<RecipePostCard> {
     setState(() {
       _likes++;
     });
+    widget.onLike?.call(); // notify parent if provided
+  }
+
+  Widget _buildImage() {
+    const double imageHeight = 200;
+    if (widget.imageBytes != null) {
+      return _styledImage(Image.memory(widget.imageBytes!, fit: BoxFit.cover, width: double.infinity, height: imageHeight));
+    } else if (widget.imageFile != null) {
+      return _styledImage(Image.file(widget.imageFile!, fit: BoxFit.cover, width: double.infinity, height: imageHeight));
+    } else if (widget.imageUrl != null) {
+      return _styledImage(Image.asset(widget.imageUrl!, fit: BoxFit.cover, width: double.infinity, height: imageHeight));
+    } else {
+      return const SizedBox.shrink();
+    }
+  }
+
+  Widget _styledImage(Image imageWidget) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(8),
+      child: imageWidget,
+    );
   }
 
   @override
@@ -57,15 +85,12 @@ class _RecipePostCardState extends State<RecipePostCard> {
             padding: const EdgeInsets.symmetric(horizontal: 12),
             child: Text(
               widget.description,
-              maxLines: 2,
+              maxLines: 5,
               overflow: TextOverflow.ellipsis,
             ),
           ),
           const SizedBox(height: 8),
-          if (widget.imageFile != null)
-            Image.file(widget.imageFile!)
-          else if (widget.imageUrl != null)
-            Image.asset(widget.imageUrl!, fit: BoxFit.cover),
+          _buildImage(),
           const SizedBox(height: 8),
           const Divider(height: 1),
           Padding(

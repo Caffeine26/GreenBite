@@ -1,9 +1,8 @@
-import 'dart:io';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:greenbite_app/components/RecipePostCard.dart';
 import 'package:greenbite_app/screens/accounts/edit_profile_info.dart';
-
 
 class AccountPage extends StatefulWidget {
   const AccountPage({super.key});
@@ -13,13 +12,14 @@ class AccountPage extends StatefulWidget {
 }
 
 class _AccountPageState extends State<AccountPage> {
-  File? _pickedImage;
+  Uint8List? _pickedImageBytes;
 
   Future<void> _pickImage() async {
     final picked = await ImagePicker().pickImage(source: ImageSource.gallery);
     if (picked != null) {
+      final bytes = await picked.readAsBytes();
       setState(() {
-        _pickedImage = File(picked.path);
+        _pickedImageBytes = bytes;
       });
     }
   }
@@ -84,8 +84,8 @@ class _AccountPageState extends State<AccountPage> {
                   label: const Text("Add post"),
                   onPressed: _pickImage,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 6, 179, 12), 
-                    foregroundColor: Colors.white, 
+                    backgroundColor: const Color.fromARGB(255, 6, 179, 12),
+                    foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   ),
                 ),
@@ -100,7 +100,6 @@ class _AccountPageState extends State<AccountPage> {
                     );
                   },
                 ),
-
               ],
             ),
             const Divider(height: 24),
@@ -111,8 +110,6 @@ class _AccountPageState extends State<AccountPage> {
                 child: Text("Posts", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
               ),
             ),
-
-            // Example posts
             RecipePostCard(
               username: "KiKi",
               date: "8 March",
@@ -129,13 +126,12 @@ class _AccountPageState extends State<AccountPage> {
               imageUrl: 'assets/images/fried-chicken.jpg',
               likes: 9,
             ),
-
-            if (_pickedImage != null)
+            if (_pickedImageBytes != null)
               RecipePostCard(
                 username: "KiKi",
                 date: "Today",
                 description: "My new recipe upload!",
-                imageFile: _pickedImage,
+                imageBytes: _pickedImageBytes,
                 likes: 0,
               ),
           ],
