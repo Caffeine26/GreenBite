@@ -17,12 +17,19 @@ class FilteredRecipes extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
         title: Text(
           'Category: $category',
           style: TextStyle(color: Colors.white),
         ),
         backgroundColor: Color(0xFF18542A),
       ),
+
       body: ListView.builder(
         padding: const EdgeInsets.all(16),
         itemCount: filtered.length,
