@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:greenbite_app/screens/CookBook.dart';
 import 'package:greenbite_app/screens/PrivacyPolicy/privacy_policy.dart';
+import 'package:greenbite_app/screens/accounts/AccountPage.dart';
+import 'package:greenbite_app/screens/community/CommunityPage.dart';
 import 'package:greenbite_app/screens/favorite/favorite_screen.dart';
 import 'package:greenbite_app/screens/filter_recipe/filter_recipe.dart';
 import 'package:greenbite_app/screens/rewards/rewards_screen.dart';
@@ -47,7 +49,8 @@ class MyApp extends StatelessWidget {
         '/': (context) => const FlushScreen(),
         '/home': (context) => const Listing(),
         '/about': (context) => const AboutUsPage(),
-        '/account': (context) => const EditProfileInfo(),
+        '/account': (context) => const AccountPage(),
+        '/account-edit': (context) => const EditProfileInfo(),
         '/setting': (context) => const SettingsPage(),
         '/filtered': (context) => const FilteredRecipes(),
         '/upload': (context) => const AddPhotoPage(),
@@ -63,6 +66,7 @@ class MyApp extends StatelessWidget {
         '/cookbook': (context) => const CookBookPage(),
         '/score': (context) => const RewardsScreen(),
         '/privacy': (context) => const PrivacyPolicyPage(),
+        '/community': (context) => const CommunityPage(),
       },
     );
   }

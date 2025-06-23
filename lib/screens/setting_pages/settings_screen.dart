@@ -74,7 +74,7 @@ class _SettingsPageState extends State<SettingsPage> {
           ListTile(
             title: const Text('Edit Profile Information'),
             onTap: () {
-              Navigator.pushReplacementNamed(context, '/account');
+              Navigator.pushReplacementNamed(context, '/account-edit');
             },
           ),
           ListTile(
