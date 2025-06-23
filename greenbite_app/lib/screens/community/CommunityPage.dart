@@ -19,18 +19,20 @@ class _CommunityPageState extends State<CommunityPage> {
     {
       'username': 'KiKi',
       'date': 'today 8h ago',
-      'description': "Bay Kork Veggies Fried Rice\nA quick and tasty way to use leftover veggies and shrimp",
+      'description':
+          "Bay Kork Veggies Fried Rice\nA quick and tasty way to use leftover veggies and shrimp",
       'imageUrl': 'assets/images/fried-rice.jpg',
       'likes': 3,
-      'comments': []
+      'comments': <Map<String, String>>[]
     },
     {
       'username': 'KiKi',
       'date': '19 June',
-      'description': "Look what I made for my family today! Very delicious\n#leftover #creative #nofoodwaste",
+      'description':
+          "Look what I made for my family today! Very delicious\n#leftover #creative #nofoodwaste",
       'imageUrl': 'assets/images/fried-chicken.jpg',
       'likes': 9,
-      'comments': []
+      'comments': <Map<String, String>>[]
     },
   ];
 
@@ -63,7 +65,7 @@ class _CommunityPageState extends State<CommunityPage> {
             : _descriptionController.text.trim(),
         'imageBytes': _pickedImageBytes,
         'likes': 0,
-        'comments': []
+        'comments': <Map<String, String>>[]
       });
 
       _descriptionController.clear();
@@ -98,7 +100,6 @@ class _CommunityPageState extends State<CommunityPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Post input area
             Padding(
               padding: const EdgeInsets.only(top: 12),
               child: Row(
@@ -181,8 +182,6 @@ class _CommunityPageState extends State<CommunityPage> {
                 ],
               ),
             ),
-
-            // Preview selected image
             if (_pickedImageBytes != null)
               Padding(
                 padding: const EdgeInsets.only(top: 12),
@@ -191,77 +190,29 @@ class _CommunityPageState extends State<CommunityPage> {
                   child: Image.memory(_pickedImageBytes!, height: 150),
                 ),
               ),
-
             const Divider(thickness: 1, height: 30),
-
-            // Posts list
             ..._posts.map((post) {
-              final commentController = TextEditingController();
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  RecipePostCard(
-                    username: post['username'],
-                    date: post['date'],
-                    description: post['description'],
-                    imageBytes: post['imageBytes'],
-                    imageUrl: post['imageUrl'],
-                    likes: post['likes'],
-                    onLike: () {
-                      setState(() {
-                        post['likes']++;
-                      });
-                    },
-                    onComment: (text) {
-                      setState(() {
-                        post['comments'].add(text);
-                      });
-                    },
-                    onShare: () => _showSharePopup(context),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const CircleAvatar(
-                          radius: 18,
-                          backgroundImage: AssetImage('assets/images/profile.png'),
-                        ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: TextField(
-                            controller: commentController,
-                            decoration: InputDecoration(
-                              hintText: "Comment as KiKi",
-                              filled: true,
-                              fillColor: Colors.grey[100],
-                              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
-                                borderSide: BorderSide(color: Colors.grey.shade300),
-                              ),
-                            ),
-                          ),
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            if (commentController.text.isNotEmpty) {
-                              setState(() {
-                                post['comments'].add(commentController.text);
-                                commentController.clear();
-                              });
-                            }
-                          },
-                          icon: const Icon(Icons.send, color: Colors.green),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+              return RecipePostCard(
+                username: post['username'],
+                date: post['date'],
+                description: post['description'],
+                imageBytes: post['imageBytes'],
+                imageUrl: post['imageUrl'],
+                likes: post['likes'],
+                onLike: () {
+                  setState(() {
+                    post['likes']++;
+                  });
+                },
+                onComment: (text) {
+                  setState(() {
+                    post['comments'].add({'user': 'KiKi', 'text': text});
+                  });
+                },
+                onShare: () => _showSharePopup(context),
+                comments: post['comments'],
               );
             }).toList(),
-
             const SizedBox(height: 12),
           ],
         ),

@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'SharePopup.dart'; // import SharePopup
+import 'SharePopup.dart';
 
 class RecipePostCard extends StatefulWidget {
   final String username;
@@ -11,6 +11,8 @@ class RecipePostCard extends StatefulWidget {
   final int likes;
   final void Function()? onLike;
   final void Function(String text)? onComment;
+  final void Function() onShare;
+  final List<Map<String, String>>? comments;
 
   const RecipePostCard({
     super.key,
@@ -21,7 +23,9 @@ class RecipePostCard extends StatefulWidget {
     this.imageUrl,
     this.likes = 0,
     this.onLike,
-    this.onComment, required void Function() onShare,
+    this.onComment,
+    required this.onShare,
+    this.comments,
   });
 
   @override
@@ -30,6 +34,8 @@ class RecipePostCard extends StatefulWidget {
 
 class _RecipePostCardState extends State<RecipePostCard> {
   late int _likes;
+  bool _showCommentInput = false;
+  final TextEditingController _commentController = TextEditingController();
 
   @override
   void initState() {
@@ -44,11 +50,12 @@ class _RecipePostCardState extends State<RecipePostCard> {
     widget.onLike?.call();
   }
 
-  void _showSharePopup(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) => const SharePopup(),
-    );
+  void _submitComment() {
+    final text = _commentController.text.trim();
+    if (text.isNotEmpty) {
+      widget.onComment?.call(text);
+      _commentController.clear();
+    }
   }
 
   Widget _buildImage() {
@@ -126,15 +133,22 @@ class _RecipePostCardState extends State<RecipePostCard> {
                     ],
                   ),
                 ),
-                Row(
-                  children: const [
-                    Icon(Icons.comment_outlined, size: 20),
-                    SizedBox(width: 4),
-                    Text("Comment"),
-                  ],
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _showCommentInput = !_showCommentInput;
+                    });
+                  },
+                  child: Row(
+                    children: const [
+                      Icon(Icons.comment_outlined, size: 20),
+                      SizedBox(width: 4),
+                      Text("Comment"),
+                    ],
+                  ),
                 ),
                 GestureDetector(
-                  onTap: () => _showSharePopup(context), // triggers the popup
+                  onTap: widget.onShare,
                   child: Row(
                     children: const [
                       Icon(Icons.share_outlined, size: 20),
@@ -146,6 +160,77 @@ class _RecipePostCardState extends State<RecipePostCard> {
               ],
             ),
           ),
+          if (_showCommentInput) ...[
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8),
+              child: Row(
+                children: [
+                  const CircleAvatar(
+                    radius: 18,
+                    backgroundImage: AssetImage('assets/images/profile.png'),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: TextField(
+                      controller: _commentController,
+                      onSubmitted: (_) => _submitComment(),
+                      decoration: InputDecoration(
+                        hintText: "Comment as KiKi",
+                        filled: true,
+                        fillColor: Colors.grey[100],
+                        contentPadding:
+                            const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20),
+                          borderSide: BorderSide(color: Colors.grey.shade300),
+                        ),
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: _submitComment,
+                    icon: const Icon(Icons.send, color: Colors.green),
+                  ),
+                ],
+              ),
+            ),
+            ...?widget.comments?.map((comment) {
+              return Padding(
+                padding: const EdgeInsets.only(top: 12.0, left: 12.0, right: 12.0),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const CircleAvatar(
+                      radius: 16,
+                      backgroundImage: AssetImage('assets/images/profile.png'),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[100],
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              comment['user'] ?? 'Unknown',
+                              style: const TextStyle(fontWeight: FontWeight.w600),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(comment['text'] ?? ''),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }).toList(),
+            const SizedBox(height: 12),
+          ]
         ],
       ),
     );
