@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:greenbite_app/screens/PrivacyPolicy/privacy_policy.dart';
+import 'package:greenbite_app/screens/favorite/favorite_screen.dart';
 import 'package:greenbite_app/screens/filter_recipe/filter_recipe.dart';
 import 'package:greenbite_app/screens/rewards/rewards_screen.dart';
 import 'package:greenbite_app/screens/setting_pages/settings_screen.dart';
@@ -53,7 +54,7 @@ class MyApp extends StatelessWidget {
         /**
          * Waiting for pages to route
          */
-        // '/favorite': (context) => const FavoritePage(),
+        '/favorite': (context) => const FavoriteScreen(),
         // '/upload': (context) => const UploadPage(),
         // '/community': (context) => const CommunityPage(),
         '/score': (context) => const RewardsScreen(),
