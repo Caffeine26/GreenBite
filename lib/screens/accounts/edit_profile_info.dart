@@ -24,6 +24,14 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
   void initState() {
     super.initState();
     _loadProfileData();
+
+    // Add listeners here once
+    nameController.addListener(_onFieldChanged);
+    usernameController.addListener(_onFieldChanged);
+    bioController.addListener(_onFieldChanged);
+    emailController.addListener(_onFieldChanged);
+    phoneController.addListener(_onFieldChanged);
+    passwordController.addListener(_onFieldChanged);
   }
 
   Future<void> _loadProfileData() async {
@@ -75,11 +83,23 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
   }
 
   @override
+  void dispose() {
+    // Dispose controllers
+    nameController.dispose();
+    usernameController.dispose();
+    bioController.dispose();
+    emailController.dispose();
+    phoneController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Color(0xFF18542A),
+        backgroundColor: const Color(0xFF18542A),
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
@@ -89,7 +109,6 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
           'Edit Profile Information',
           style: TextStyle(color: Colors.white),
         ),
-        // centerTitle: true,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -101,11 +120,10 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
               onTap: _pickImage,
               child: CircleAvatar(
                 radius: 50,
-                backgroundImage:
-                    _image != null
-                        ? FileImage(_image!)
-                        : const AssetImage('assets/images/profile.png')
-                            as ImageProvider,
+                backgroundImage: _image != null
+                    ? FileImage(_image!)
+                    : const AssetImage('assets/images/profile.png')
+                        as ImageProvider,
               ),
             ),
             const SizedBox(height: 8),
@@ -134,8 +152,6 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
     TextEditingController controller, {
     bool obscureText = false,
   }) {
-    controller.addListener(_onFieldChanged); // Save when typing
-
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
