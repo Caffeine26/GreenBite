@@ -40,14 +40,30 @@ class _MyWidgetState extends State<AppHeader> {
           ),
           Row(
             children: [
-              Container(
-                padding: const EdgeInsets.all(6),
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Color(0xFFFED766),
+              // Make the star icon clickable
+              SizedBox(
+                width: 30,
+                height: 30,
+                child: Container(
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Color(0xFFFED766),
+                  ),
+                  child: IconButton(
+                    icon: const Icon(
+                      Icons.star,
+                      size: 16,
+                      color: Colors.orange,
+                    ),
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(),
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/score');
+                    },
+                  ),
                 ),
-                child: const Icon(Icons.star, size: 18, color: Colors.orange),
               ),
+
               const SizedBox(width: 16),
               const Icon(Icons.notifications_outlined),
               const SizedBox(width: 16),
