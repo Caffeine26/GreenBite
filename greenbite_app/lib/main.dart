@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:greenbite_app/screens/CookBook.dart';
+// import 'package:greenbite_app/components/popup/searchdetail.dart';
 // import 'package:greenbite_app/screens/login_and_register/welcome_screen.dart';
 // import 'package:greenbite_app/screens/about_us/about_us.dart';
 // import 'package:greenbite_app/screens/privacypolicy/privacy_policy.dart';
 // import 'package:greenbite_app/components/popup/menu.dart';
 // import 'package:greenbite_app/components/popup/notification.dart ';
-import 'package:greenbite_app/components/popup/search.dart  ';
+// import 'package:greenbite_app/components/popup/search.dart  ';
 
 void main() {
   runApp(const MyApp());
@@ -30,7 +32,11 @@ class MyApp extends StatelessWidget {
       // home: const PrivacyPolicyPage(),
       // home: const MenuPopup(),
       // home: const NotificationPopup(),
-      home: const SearchPopup(),
+      // home: const SearchPopup(),
+      // home: const SearchDetailPopup(),
+      home : const CookBookPage(),
+     
+    
     );
   }
   
