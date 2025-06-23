@@ -15,7 +15,14 @@ class FilteredRecipes extends StatelessWidget {
         recipeList.where((recipe) => recipe['category'] == category).toList();
 
     return Scaffold(
-      appBar: AppBar(title: Text('Category: $category')),
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        title: Text(
+          'Category: $category',
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Color(0xFF18542A),
+      ),
       body: ListView.builder(
         padding: const EdgeInsets.all(16),
         itemCount: filtered.length,
@@ -29,6 +36,7 @@ class FilteredRecipes extends StatelessWidget {
               imageName: recipe['image'],
               title: recipe['title'],
               rating: recipe['rating'],
+              category: recipe['category'],
             ),
           );
         },

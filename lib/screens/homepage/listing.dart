@@ -71,23 +71,8 @@ class _ListingState extends State<Listing> {
                   ),
                   title: recipe['title'],
                   rating: recipe['rating'],
+                  category: recipe['category'],
                 ),
-              ),
-              // Static recipe cards just for viewing
-              const Product(
-                imageName: 'amok.jpg',
-                title: 'Amok Trei',
-                rating: 4.8,
-              ),
-              const Product(
-                imageName: 'dumpling.jpg',
-                title: 'Classic Xiao Long Bao China town',
-                rating: 4.5,
-              ),
-              const Product(
-                imageName: 'akor.jpg',
-                title: 'Cambodian Delicacy',
-                rating: 4.2,
               ),
               const SizedBox(height: 20),
             ],
