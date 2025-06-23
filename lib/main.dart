@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';  // Import the generated Firebase options
+
 import 'package:google_fonts/google_fonts.dart';
 import 'package:greenbite_app/screens/filter_recipe/filter_recipe.dart';
 import 'package:greenbite_app/screens/rewards/rewards_screen.dart';
 import 'package:greenbite_app/screens/setting_pages/settings_screen.dart';
 import 'package:greenbite_app/screens/detail_page/recipe_detail.dart';
-
 
 // Pages
 import 'package:greenbite_app/screens/splash_screen/splash_sreen.dart';
@@ -14,12 +16,18 @@ import 'package:greenbite_app/screens/accounts/edit_profile_info.dart';
 import 'package:greenbite_app/screens/uploading_step/step1.dart';
 import 'package:greenbite_app/screens/uploading_step/step2.dart';
 import 'package:greenbite_app/screens/uploading_step/step3.dart';
-// import other pages like favorite, upload, etc.
+import 'package:greenbite_app/screens/login_and_register/register_screen.dart';
+import 'package:greenbite_app/screens/login_and_register/signin_screen.dart';
 
-//Navigation key
+// Navigation key
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,  // Use Firebase options here
+  );
+
   runApp(const MyApp());
 }
 
@@ -53,13 +61,15 @@ class MyApp extends StatelessWidget {
         '/upload-progress': (context) => const UploadProgressPage(),
         '/recipe-detail': (context) => const RecipeDetail(recipeId: 'test-recipe'),
 
-        /**
-         * Waiting for pages to route
-         */
-        // '/favorite': (context) => const FavoritePage(),
-        // '/upload': (context) => const UploadPage(),
-        // '/community': (context) => const CommunityPage(),
+        // Auth Screens
+        '/register': (context) => const RegisterScreen(),
+        '/login': (context) => const SignInScreen(),
+
         '/score': (context) => const RewardsScreen(),
+
+        // Waiting for pages
+        // '/favorite': (context) => const FavoritePage(),
+        // '/community': (context) => const CommunityPage(),
       },
     );
   }

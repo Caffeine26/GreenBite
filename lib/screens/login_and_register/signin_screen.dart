@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:greenbite_app/screens/homepage/listing.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:greenbite_app/services/auth_service.dart';
 import 'package:greenbite_app/screens/login_and_register/register_screen.dart';
+import 'package:greenbite_app/screens/homepage/listing.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -11,15 +13,55 @@ class SignInScreen extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInScreen> {
-  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final AuthService _authService = AuthService();
+
   bool _obscurePassword = true;
+  bool _isLoading = false;
 
   @override
   void dispose() {
-    _usernameController.dispose();
+    _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  Future<void> _login() async {
+    // Basic validation
+    final email = _emailController.text.trim();
+    final password = _passwordController.text.trim();
+
+    if (email.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please enter both email and password')),
+      );
+      return;
+    }
+
+    setState(() => _isLoading = true);
+
+    try {
+      final user = await _authService.loginWithEmail(
+        email: email,
+        password: password,
+      );
+
+      if (user != null && mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const Listing()),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(e.toString())),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
   }
 
   @override
@@ -40,9 +82,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
-                      builder: (context) => const RegisterScreen(),
-                    ),
+                    MaterialPageRoute(builder: (context) => const RegisterScreen()),
                   );
                 },
                 child: Text(
@@ -59,11 +99,10 @@ class _SignInScreenState extends State<SignInScreen> {
         ],
       ),
       body: Container(
-        color: const Color(0xFF18542A), // Dark green background
+        color: const Color(0xFF18542A),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Sign In Title and Welcome Text
             Padding(
               padding: const EdgeInsets.fromLTRB(24, 20, 24, 30),
               child: Column(
@@ -88,8 +127,6 @@ class _SignInScreenState extends State<SignInScreen> {
                 ],
               ),
             ),
-
-            // White Card with Form Fields
             Expanded(
               child: Container(
                 decoration: const BoxDecoration(
@@ -104,11 +141,11 @@ class _SignInScreenState extends State<SignInScreen> {
                   child: SingleChildScrollView(
                     child: Column(
                       children: [
-                        // Username Field
                         TextField(
-                          controller: _usernameController,
+                          controller: _emailController,
+                          keyboardType: TextInputType.emailAddress,
                           decoration: InputDecoration(
-                            hintText: 'Username',
+                            hintText: 'Email',
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(30),
                             ),
@@ -119,8 +156,6 @@ class _SignInScreenState extends State<SignInScreen> {
                           ),
                         ),
                         const SizedBox(height: 16),
-
-                        // Password Field
                         TextField(
                           controller: _passwordController,
                           obscureText: _obscurePassword,
@@ -128,9 +163,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             hintText: 'Password',
                             suffixIcon: IconButton(
                               icon: Icon(
-                                _obscurePassword
-                                    ? Icons.visibility_off
-                                    : Icons.visibility,
+                                _obscurePassword ? Icons.visibility_off : Icons.visibility,
                                 color: Colors.grey,
                               ),
                               onPressed: () {
@@ -148,13 +181,11 @@ class _SignInScreenState extends State<SignInScreen> {
                             ),
                           ),
                         ),
-
-                        // Forgot Password Link
                         Align(
                           alignment: Alignment.centerRight,
                           child: TextButton(
                             onPressed: () {
-                              // Handle forgot password
+                              // TODO: Implement forgot password functionality
                             },
                             child: Text(
                               'Forgot Password?',
@@ -162,19 +193,11 @@ class _SignInScreenState extends State<SignInScreen> {
                             ),
                           ),
                         ),
-
-                        // Sign In Button
+                        const SizedBox(height: 16),
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const Listing(),
-                                ),
-                              );
-                            },
+                            onPressed: _isLoading ? null : _login,
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFF18542A),
                               padding: const EdgeInsets.symmetric(vertical: 16),
@@ -182,135 +205,20 @@ class _SignInScreenState extends State<SignInScreen> {
                                 borderRadius: BorderRadius.circular(30),
                               ),
                             ),
-                            child: Text(
-                              'Sign In',
-                              style: GoogleFonts.poppins(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ),
-
-                        // Or Divider
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          child: Row(
-                            children: [
-                              const Expanded(
-                                child: Divider(
-                                  color: Colors.grey,
-                                  thickness: 1,
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 16,
-                                ),
-                                child: Text(
-                                  'or',
-                                  style: GoogleFonts.poppins(
-                                    color: Colors.grey,
+                            child: _isLoading
+                                ? const CircularProgressIndicator(color: Colors.white)
+                                : Text(
+                                    'Sign In',
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
                                   ),
-                                ),
-                              ),
-                              const Expanded(
-                                child: Divider(
-                                  color: Colors.grey,
-                                  thickness: 1,
-                                ),
-                              ),
-                            ],
                           ),
                         ),
-
-                        // Google Sign In Button
-                        SizedBox(
-                          width: double.infinity,
-                          child: OutlinedButton.icon(
-                            onPressed: () {
-                              // Handle Google sign in
-                            },
-                            icon: Image.asset(
-                              'assets/images/google_logo.png',
-                              height: 20,
-                              width: 20,
-                            ),
-                            label: Text(
-                              'Continue with Google',
-                              style: GoogleFonts.poppins(
-                                color: Colors.black87,
-                                fontSize: 16,
-                              ),
-                            ),
-                            style: OutlinedButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(vertical: 16),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30),
-                              ),
-                              side: const BorderSide(color: Colors.grey),
-                            ),
-                          ),
-                        ),
-
                         const SizedBox(height: 16),
-
-                        // Facebook Sign In Button
-                        SizedBox(
-                          width: double.infinity,
-                          child: OutlinedButton.icon(
-                            onPressed: () {
-                              // Handle Facebook sign in
-                            },
-                            icon: Image.asset(
-                              'assets/images/facebook_logo.png',
-                              height: 20,
-                              width: 20,
-                            ),
-                            label: Text(
-                              'Continue with Facebook',
-                              style: GoogleFonts.poppins(
-                                color: Colors.black87,
-                                fontSize: 16,
-                              ),
-                            ),
-                            style: OutlinedButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(vertical: 16),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30),
-                              ),
-                              side: const BorderSide(color: Colors.grey),
-                            ),
-                          ),
-                        ),
-
-                        // const SizedBox(height: 20),
-
-                        // // Don't have an account? Sign Up
-                        // Row(
-                        //   mainAxisAlignment: MainAxisAlignment.center,
-                        //   children: [
-                        //     Text(
-                        //       "Don't have an account?",
-                        //       style: GoogleFonts.poppins(
-                        //         color: Colors.grey,
-                        //       ),
-                        //     ),
-                        //     TextButton(
-                        //       onPressed: () {
-                        //         // Navigate to sign up screen
-                        //       },
-                        //       child: Text(
-                        //         'Sign Up',
-                        //         style: GoogleFonts.poppins(
-                        //           color: const Color(0xFF1B5E20),
-                        //           fontWeight: FontWeight.bold,
-                        //         ),
-                        //       ),
-                        //     ),
-                        //   ],
-                        // ),
+                        // Optional: Add Google/Facebook sign-in buttons here
                       ],
                     ),
                   ),

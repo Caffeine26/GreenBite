@@ -1,13 +1,45 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class AppHeader extends StatefulWidget {
   const AppHeader({super.key});
 
   @override
-  State<AppHeader> createState() => _MyWidgetState();
+  State<AppHeader> createState() => _AppHeaderState();
 }
 
-class _MyWidgetState extends State<AppHeader> {
+class _AppHeaderState extends State<AppHeader> {
+  String fullName = 'User';
+  int score = 0;
+  String? imageUrl;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchUserProfile();
+  }
+
+  Future<void> fetchUserProfile() async {
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get();
+
+      if (userDoc.exists) {
+        final data = userDoc.data()!;
+        setState(() {
+          fullName = data['username'] ?? 'User';
+          score = data['score'] ?? 0;
+          imageUrl = data['imageUrl'];
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -17,22 +49,30 @@ class _MyWidgetState extends State<AppHeader> {
         children: [
           Row(
             children: [
-              const CircleAvatar(
+              CircleAvatar(
                 radius: 24,
-                backgroundImage: AssetImage('assets/images/profile.png'),
+                backgroundImage: imageUrl != null
+                    ? NetworkImage(imageUrl!)
+                    : const AssetImage('assets/images/profile.png') as ImageProvider,
               ),
               const SizedBox(width: 12),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
+                children: [
                   Text(
-                    'Welcome, KiKi',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    'Welcome, $fullName',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
                   ),
-                  SizedBox(height: 4),
+                  const SizedBox(height: 4),
                   Text(
-                    'Your scores: 168',
-                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
+                    'Your scores: $score',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 14,
+                    ),
                   ),
                 ],
               ),
@@ -40,7 +80,6 @@ class _MyWidgetState extends State<AppHeader> {
           ),
           Row(
             children: [
-              // Make the star icon clickable
               SizedBox(
                 width: 30,
                 height: 30,
@@ -63,7 +102,6 @@ class _MyWidgetState extends State<AppHeader> {
                   ),
                 ),
               ),
-
               const SizedBox(width: 16),
               const Icon(Icons.notifications_outlined),
               const SizedBox(width: 16),
