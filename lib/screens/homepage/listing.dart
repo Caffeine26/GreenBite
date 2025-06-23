@@ -4,8 +4,8 @@ import 'package:greenbite_app/components/foodcategory.dart';
 import 'package:greenbite_app/components/header.dart';
 import 'package:greenbite_app/components/search.dart';
 import 'package:greenbite_app/components/navigation.dart';
-import 'package:greenbite_app/components/recipe_card.dart'; // your Product widget
-import 'package:greenbite_app/data/recipes.dart'; // import your shared recipeList
+import 'package:greenbite_app/components/recipe_card.dart';
+import 'package:greenbite_app/data/recipes.dart';
 
 class Listing extends StatefulWidget {
   const Listing({super.key});

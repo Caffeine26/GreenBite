@@ -6,12 +6,12 @@ class HistoryPostItem extends StatelessWidget {
   final String time;
   final int points;
   const HistoryPostItem({
-    Key? key,
+    super.key,
     required this.imagePath,
     required this.title,
     required this.time,
     required this.points,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -4,7 +4,7 @@ import 'exchange_prize_screen.dart';
 import 'history_post_item.dart';
 
 class RewardsScreen extends StatelessWidget {
-  const RewardsScreen({Key? key}) : super(key: key);
+  const RewardsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -167,11 +167,11 @@ class RewardCard extends StatefulWidget {
   final Color color;
 
   const RewardCard({
-    Key? key,
+    super.key,
     required this.label,
     required this.points,
     required this.color,
-  }) : super(key: key);
+  });
 
   @override
   State<RewardCard> createState() => _RewardCardState();

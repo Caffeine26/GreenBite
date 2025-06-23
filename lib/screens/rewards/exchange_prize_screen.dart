@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class ExchangePrizeScreen extends StatelessWidget {
-  const ExchangePrizeScreen({Key? key}) : super(key: key);
+  const ExchangePrizeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
