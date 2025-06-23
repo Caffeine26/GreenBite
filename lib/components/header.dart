@@ -1,0 +1,61 @@
+import 'package:flutter/material.dart';
+
+class AppHeader extends StatefulWidget {
+  const AppHeader({super.key});
+
+  @override
+  State<AppHeader> createState() => _MyWidgetState();
+}
+
+class _MyWidgetState extends State<AppHeader> {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 15.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              const CircleAvatar(
+                radius: 24,
+                backgroundImage: AssetImage('assets/images/profile.png'),
+              ),
+              const SizedBox(width: 12),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: const [
+                  Text(
+                    'Welcome, KiKi',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
+                  SizedBox(height: 4),
+                  Text(
+                    'Your scores: 168',
+                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(6),
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Color(0xFFFED766),
+                ),
+                child: const Icon(Icons.star, size: 18, color: Colors.orange),
+              ),
+              const SizedBox(width: 16),
+              const Icon(Icons.notifications_outlined),
+              const SizedBox(width: 16),
+              const Icon(Icons.menu),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
