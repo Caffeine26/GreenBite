@@ -70,11 +70,11 @@ class _ListingState extends State<Listing> {
                     '',
                   ),
                   title: recipe['title'],
-                  rating: recipe['rating'],
+                  rating: (recipe['rating'] as num).toDouble(), // ✅ FIXED HERE
                   category: recipe['category'],
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 20.0),
             ],
           ),
         ),
