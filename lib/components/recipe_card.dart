@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class Product extends StatelessWidget {
+class Product extends StatefulWidget {
   final String imageName;
   final String title;
   final double rating;
@@ -15,6 +15,13 @@ class Product extends StatelessWidget {
   });
 
   @override
+  State<Product> createState() => _ProductState();
+}
+
+class _ProductState extends State<Product> {
+  bool isFavorite = false;
+
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
@@ -22,10 +29,10 @@ class Product extends StatelessWidget {
           context,
           '/recipe-detail',
           arguments: {
-            'imageName': imageName,
-            'title': title,
-            'rating': rating,
-            'category': category,
+            'imageName': widget.imageName,
+            'title': widget.title,
+            'rating': widget.rating,
+            'category': widget.category,
           },
         );
       },
@@ -41,7 +48,7 @@ class Product extends StatelessWidget {
                     top: Radius.circular(16),
                   ),
                   child: Image.asset(
-                    'assets/images/$imageName',
+                    'assets/images/${widget.imageName}',
                     height: 160,
                     width: double.infinity,
                     fit: BoxFit.cover,
@@ -50,9 +57,19 @@ class Product extends StatelessWidget {
                 Positioned(
                   top: 8,
                   right: 8,
-                  child: CircleAvatar(
-                    backgroundColor: Colors.white,
-                    child: Icon(Icons.favorite_border, color: Colors.black),
+                  child: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        isFavorite = !isFavorite;
+                      });
+                    },
+                    child: CircleAvatar(
+                      backgroundColor: Colors.white,
+                      child: Icon(
+                        isFavorite ? Icons.favorite : Icons.favorite_border,
+                        color: isFavorite ? Colors.red : Colors.black,
+                      ),
+                    ),
                   ),
                 ),
               ],
@@ -63,7 +80,7 @@ class Product extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    title,
+                    widget.title,
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -74,7 +91,7 @@ class Product extends StatelessWidget {
                       const Icon(Icons.star, color: Colors.amber, size: 18),
                       const SizedBox(width: 4),
                       Text(
-                        rating.toString(),
+                        widget.rating.toString(),
                         style: const TextStyle(fontSize: 14),
                       ),
                     ],
