@@ -1,16 +1,22 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class EditProfileInfo extends StatefulWidget {
   const EditProfileInfo({super.key});
 
   @override
-  _EditProfileInfoState createState() => _EditProfileInfoState();
+  State<EditProfileInfo> createState() => _EditProfileInfoState();
 }
 
 class _EditProfileInfoState extends State<EditProfileInfo> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseStorage _storage = FirebaseStorage.instance;
+
   final nameController = TextEditingController();
   final usernameController = TextEditingController();
   final bioController = TextEditingController();
@@ -19,72 +25,80 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
   final passwordController = TextEditingController();
 
   File? _image;
+  String? imageUrl;
+  bool _isSaving = false;
 
   @override
   void initState() {
     super.initState();
-    _loadProfileData();
-
-    // Add listeners here once
-    nameController.addListener(_onFieldChanged);
-    usernameController.addListener(_onFieldChanged);
-    bioController.addListener(_onFieldChanged);
-    emailController.addListener(_onFieldChanged);
-    phoneController.addListener(_onFieldChanged);
-    passwordController.addListener(_onFieldChanged);
+    _loadProfile();
   }
 
-  Future<void> _loadProfileData() async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      nameController.text = prefs.getString('name') ?? 'KiKi';
-      usernameController.text =
-          prefs.getString('username') ?? 'kiki_do_u_love_me';
-      bioController.text =
-          prefs.getString('bio') ?? 'when life gives you lemons, make mojito';
-      emailController.text = prefs.getString('email') ?? 'kikil27@gmail.com';
-      phoneController.text = prefs.getString('phone') ?? '012 345 678';
-      passwordController.text = prefs.getString('password') ?? 'password';
+  Future<void> _loadProfile() async {
+    final uid = _auth.currentUser?.uid;
+    if (uid == null) return;
 
-      String? imagePath = prefs.getString('profile_image');
-      if (imagePath != null && File(imagePath).existsSync()) {
-        _image = File(imagePath);
+    try {
+      final doc = await _firestore.collection('users').doc(uid).get();
+      final data = doc.data();
+
+      if (data != null) {
+        setState(() {
+          nameController.text = data['name'] ?? '';
+          usernameController.text = data['username'] ?? '';
+          bioController.text = data['bio'] ?? '';
+          phoneController.text = data['phone'] ?? '';
+          imageUrl = data['imageUrl'];
+          emailController.text = _auth.currentUser?.email ?? '';
+          passwordController.text = '********'; // Placeholder for visibility only
+        });
       }
-    });
-  }
-
-  Future<void> _saveProfileData() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('name', nameController.text);
-    await prefs.setString('username', usernameController.text);
-    await prefs.setString('bio', bioController.text);
-    await prefs.setString('email', emailController.text);
-    await prefs.setString('phone', phoneController.text);
-    await prefs.setString('password', passwordController.text);
-    if (_image != null) {
-      await prefs.setString('profile_image', _image!.path);
+    } catch (e) {
+      debugPrint('Failed to load profile: $e');
     }
   }
 
   Future<void> _pickImage() async {
-    final pickedFile = await ImagePicker().pickImage(
-      source: ImageSource.gallery,
-    );
-    if (pickedFile != null) {
+    final picked = await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (picked != null) {
       setState(() {
-        _image = File(pickedFile.path);
+        _image = File(picked.path);
       });
-      await _saveProfileData();
     }
   }
 
-  void _onFieldChanged() {
-    _saveProfileData();
+  Future<void> _saveProfile() async {
+    final uid = _auth.currentUser?.uid;
+    if (uid == null) return;
+
+    setState(() => _isSaving = true);
+
+    String? uploadedImageUrl = imageUrl;
+
+    if (_image != null) {
+      final ref = _storage.ref().child('profile_images/$uid.jpg');
+      await ref.putFile(_image!);
+      uploadedImageUrl = await ref.getDownloadURL();
+    }
+
+    await _firestore.collection('users').doc(uid).set({
+      'name': nameController.text.trim(),
+      'username': usernameController.text.trim(),
+      'bio': bioController.text.trim(),
+      'phone': phoneController.text.trim(),
+      'imageUrl': uploadedImageUrl,
+    }, SetOptions(merge: true));
+
+    if (mounted) {
+      setState(() => _isSaving = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Profile updated')),
+      );
+    }
   }
 
   @override
   void dispose() {
-    // Dispose controllers
     nameController.dispose();
     usernameController.dispose();
     bioController.dispose();
@@ -122,7 +136,9 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
                 radius: 50,
                 backgroundImage: _image != null
                     ? FileImage(_image!)
-                    : const AssetImage('assets/images/profile.png')
+                    : (imageUrl != null
+                        ? NetworkImage(imageUrl!)
+                        : const AssetImage('assets/images/profile.png'))
                         as ImageProvider,
               ),
             ),
@@ -135,12 +151,39 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
               ),
             ),
             const SizedBox(height: 30),
+
             _buildTextRow('Name', nameController),
             _buildTextRow('Username', usernameController),
             _buildTextRow('Bio', bioController),
-            _buildTextRow('Email', emailController),
+            _buildTextRow('Email', emailController, enabled: false),
             _buildTextRow('Phone Number', phoneController),
-            _buildTextRow('Password', passwordController, obscureText: true),
+            _buildTextRow('Password', passwordController, obscureText: true, enabled: false),
+
+            const SizedBox(height: 24),
+            Center(
+              child: ElevatedButton.icon(
+                onPressed: _isSaving ? null : _saveProfile,
+                icon: const Icon(Icons.save, size: 18, color: Colors.white),
+                label: _isSaving
+                    ? const SizedBox(
+                        width: 18,
+                        height: 18,
+                        child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                      )
+                    : const Text(
+                        'Save Changes',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF18542A),
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  elevation: 3,
+                ),
+              ),
+            ),
           ],
         ),
       ),
@@ -151,6 +194,7 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
     String label,
     TextEditingController controller, {
     bool obscureText = false,
+    bool enabled = true,
   }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -172,6 +216,7 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
             child: TextField(
               controller: controller,
               obscureText: obscureText,
+              enabled: enabled,
               decoration: const InputDecoration(
                 border: InputBorder.none,
                 isDense: true,

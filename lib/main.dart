@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart'; // Import the generated Firebase options
+
 import 'package:google_fonts/google_fonts.dart';
 import 'package:greenbite_app/screens/CookBook.dart';
 import 'package:greenbite_app/screens/PrivacyPolicy/privacy_policy.dart';
@@ -18,12 +21,19 @@ import 'package:greenbite_app/screens/accounts/edit_profile_info.dart';
 import 'package:greenbite_app/screens/uploading_step/step1.dart';
 import 'package:greenbite_app/screens/uploading_step/step2.dart';
 import 'package:greenbite_app/screens/uploading_step/step3.dart';
-// import other pages like favorite, upload, etc.
+import 'package:greenbite_app/screens/login_and_register/register_screen.dart';
+import 'package:greenbite_app/screens/login_and_register/signin_screen.dart';
 
-//Navigation key
+// Navigation key
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options:
+        DefaultFirebaseOptions.currentPlatform, // Use Firebase options here
+  );
+
   runApp(const MyApp());
 }
 
@@ -59,6 +69,15 @@ class MyApp extends StatelessWidget {
         '/recipe-detail':
             (context) => const RecipeDetail(recipeId: 'test-recipe'),
 
+        // Auth Screens
+        '/register': (context) => const RegisterScreen(),
+        '/login': (context) => const SignInScreen(),
+
+        '/score': (context) => const RewardsScreen(),
+
+        // Waiting for pages
+        // '/favorite': (context) => const FavoritePage(),
+        // '/community': (context) => const CommunityPage(),
         /**
          * Waiting for pages to route
          */
