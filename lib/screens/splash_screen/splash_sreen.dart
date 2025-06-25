@@ -19,7 +19,7 @@ class _FlushScreenState extends State<FlushScreen>
     super.initState();
 
     _controller = AnimationController(
-      duration: const Duration(seconds: 1),
+      duration: const Duration(milliseconds: 700),
       vsync: this,
     );
 
@@ -30,7 +30,7 @@ class _FlushScreenState extends State<FlushScreen>
 
     _controller.forward();
 
-    Future.delayed(const Duration(seconds: 3), () {
+    Future.delayed(const Duration(milliseconds: 1200), () {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => const Tagline()),
       );

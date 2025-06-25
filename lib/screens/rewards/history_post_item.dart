@@ -19,11 +19,11 @@ class HistoryPostItem extends StatelessWidget {
       margin: const EdgeInsets.symmetric(vertical: 8),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 127, 182, 140),
+        color: Color(0xFFDDF8E6),
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Color.fromARGB(255, 48, 90, 62).withOpacity(0.08),
+            color: Color(0xFF305A3E).withOpacity(0.08),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),

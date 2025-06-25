@@ -19,10 +19,16 @@ class _MyWidgetState extends State<AppHeader> {
         children: [
           Row(
             children: [
-              const CircleAvatar(
-                radius: 24,
-                backgroundImage: AssetImage('assets/images/profile.png'),
+              GestureDetector(
+                onTap: () {
+                  Navigator.pushNamed(context, '/account');
+                },
+                child: const CircleAvatar(
+                  radius: 24,
+                  backgroundImage: AssetImage('assets/images/profile.png'),
+                ),
               ),
+
               const SizedBox(width: 12),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -60,7 +66,7 @@ class _MyWidgetState extends State<AppHeader> {
                     padding: EdgeInsets.zero,
                     constraints: const BoxConstraints(),
                     onPressed: () {
-                      Navigator.pushNamed(context, '/score');
+                      Navigator.pushNamed(context, '/score-page');
                     },
                   ),
                 ),

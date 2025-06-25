@@ -70,7 +70,7 @@ class _ListingState extends State<Listing> {
                     '',
                   ),
                   title: recipe['title'],
-                  rating: (recipe['rating'] as num).toDouble(), // ✅ FIXED HERE
+                  rating: (recipe['rating'] as num).toDouble(),
                   category: recipe['category'],
                 ),
               ),

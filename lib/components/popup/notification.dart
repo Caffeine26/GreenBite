@@ -25,6 +25,7 @@ class NotificationPopup extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            const SizedBox(height: 20),
             // Notification items
             _buildNotificationItem(
               imagePath: 'assets/images/stress.jpg', // Your cat image
@@ -57,10 +58,7 @@ class NotificationPopup extends StatelessWidget {
               padding: const EdgeInsets.all(20),
               child: Text(
                 'No other notifications',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey[500],
-                ),
+                style: TextStyle(fontSize: 14, color: Colors.grey[500]),
               ),
             ),
           ],
@@ -80,51 +78,59 @@ class NotificationPopup extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             // Avatar/Image
             Container(
               width: 48,
               height: 48,
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-              ),
-              child: imagePath != null
-                  ? ClipOval(
-                      child: Image.asset(
-                        imagePath,
-                        width: 48,
-                        height: 48,
-                        fit: BoxFit.cover,
-                      ),
-                    )
-                  : const SizedBox.shrink(),
+              decoration: const BoxDecoration(shape: BoxShape.circle),
+              child:
+                  imagePath != null
+                      ? ClipOval(
+                        child: Image.asset(
+                          imagePath,
+                          width: 48,
+                          height: 48,
+                          fit: BoxFit.cover,
+                        ),
+                      )
+                      : const SizedBox.shrink(),
             ),
             const SizedBox(width: 12),
-            // Content
+
+            // Text content vertically centered to image
             Expanded(
-              child: RichText(
-                text: TextSpan(
-                  children: [
-                    TextSpan(
-                      text: title,
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: isBold ? FontWeight.w600 : FontWeight.normal,
-                        color: Colors.black87,
+              child: Container(
+                height: 48,
+                alignment: Alignment.centerLeft,
+                child: RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: title,
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight:
+                              isBold ? FontWeight.w600 : FontWeight.normal,
+                          color: Colors.black87,
+                        ),
                       ),
-                    ),
-                    TextSpan(
-                      text: subtitle,
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: isBoldSubtitle ? FontWeight.w600 : FontWeight.normal,
-                        color: Colors.black87,
+                      TextSpan(
+                        text: subtitle,
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight:
+                              isBoldSubtitle
+                                  ? FontWeight.w600
+                                  : FontWeight.normal,
+                          color: Colors.black87,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),

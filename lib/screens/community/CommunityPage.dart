@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:greenbite_app/components/navigation.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../components/RecipePostCard.dart';
 import '../../components/SharePopup.dart';
@@ -35,6 +36,32 @@ class _CommunityPageState extends State<CommunityPage> {
       'comments': <Map<String, String>>[],
     },
   ];
+
+  int _selectedIndex = 3; // Community tab selected
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+
+    switch (index) {
+      case 0:
+        Navigator.pushReplacementNamed(context, '/home');
+        break;
+      case 1:
+        Navigator.pushReplacementNamed(context, '/favorite');
+        break;
+      case 2:
+        Navigator.pushReplacementNamed(context, '/upload');
+        break;
+      case 3:
+        Navigator.pushReplacementNamed(context, '/community');
+        break;
+      case 4:
+        Navigator.pushReplacementNamed(context, '/account');
+        break;
+    }
+  }
 
   Future<void> _pickImage() async {
     final picked = await ImagePicker().pickImage(source: ImageSource.gallery);
@@ -87,15 +114,20 @@ class _CommunityPageState extends State<CommunityPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FBF3),
+      backgroundColor: Colors.white,
+      bottomNavigationBar: Navigation(
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+      ),
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Color(0xFF18542A),
         elevation: 0,
-        title: const Text('Back', style: TextStyle(color: Colors.black)),
+        title: const Text('Community', style: TextStyle(color: Colors.white)),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.pop(context),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Navigator.pushNamed(context, '/home'),
         ),
+        centerTitle: true,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -165,7 +197,7 @@ class _CommunityPageState extends State<CommunityPage> {
                               onPressed: _cancelPost,
                               child: const Text("Cancel"),
                               style: OutlinedButton.styleFrom(
-                                foregroundColor: Colors.green,
+                                foregroundColor: Color(0xFF18542A),
                                 side: const BorderSide(
                                   color: Colors.transparent,
                                 ),
@@ -176,7 +208,7 @@ class _CommunityPageState extends State<CommunityPage> {
                               onPressed: _submitPost,
                               child: const Text("Post"),
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.green,
+                                backgroundColor: Color(0xFF18542A),
                                 foregroundColor: Colors.white,
                                 padding: const EdgeInsets.symmetric(
                                   horizontal: 24,

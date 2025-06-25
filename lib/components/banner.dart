@@ -50,7 +50,7 @@ class _AutoBannerState extends State<AutoBanner> {
       Navigator.pushNamed(context, '/about');
     } else if (index == 1) {
       //will be input later
-      // Navigator.pushNamed(context, '/score-page');
+      Navigator.pushNamed(context, '/score-page');
     }
   }
 

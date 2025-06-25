@@ -106,6 +106,7 @@ class _AddIngredientPageState extends State<AddIngredientPage> {
             Navigator.pushReplacementNamed(context, '/home');
           },
         ),
+        centerTitle: true,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),

@@ -64,7 +64,7 @@ class MyApp extends StatelessWidget {
          */
         '/favorite': (context) => const FavoriteScreen(),
         '/cookbook': (context) => const CookBookPage(),
-        '/score': (context) => const RewardsScreen(),
+        '/score-page': (context) => const RewardsScreen(),
         '/privacy': (context) => const PrivacyPolicyPage(),
         '/community': (context) => const CommunityPage(),
       },

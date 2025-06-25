@@ -80,7 +80,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.pushNamed(context, '/home'),
         ),
-        // centerTitle: true,
+        centerTitle: true,
         title: const Text(
           'Favorite',
           style: TextStyle(
@@ -89,14 +89,14 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
             fontSize: 20,
           ),
         ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 16.0),
-            child: Center(
-              child: SvgPicture.asset('assets/svg/cookbook.svg', height: 28),
-            ),
-          ),
-        ],
+        // actions: [
+        //   Padding(
+        //     padding: const EdgeInsets.only(right: 16.0),
+        //     child: Center(
+        //       child: SvgPicture.asset('assets/svg/cookbook.svg', height: 28),
+        //     ),
+        //   ),
+        // ],
       ),
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),

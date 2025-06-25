@@ -102,7 +102,7 @@ class _RecipeDetailState extends State<RecipeDetail> {
 
   Widget _buildShareOption(IconData icon, String platform) {
     return ListTile(
-      leading: Icon(icon, color: Colors.green[600]),
+      leading: Icon(icon, color: Color(0xFF18542A)),
       title: Text(platform),
       onTap: () {
         Navigator.of(context).pop();
@@ -128,7 +128,7 @@ class _RecipeDetailState extends State<RecipeDetail> {
               style: TextStyle(
                 fontSize: 32,
                 fontWeight: FontWeight.bold,
-                color: Colors.green[800],
+                color: Color(0xFF18542A),
               ),
             ),
             const SizedBox(width: 8),
@@ -150,7 +150,7 @@ class _RecipeDetailState extends State<RecipeDetail> {
         ElevatedButton(
           onPressed: () => setState(() => _showReviewForm = !_showReviewForm),
           style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.green[600],
+            backgroundColor: Color(0xFF18542A),
             foregroundColor: Colors.white,
             minimumSize: const Size(double.infinity, 48),
           ),
@@ -187,7 +187,7 @@ class _RecipeDetailState extends State<RecipeDetail> {
               ElevatedButton(
                 onPressed: _addNewReview,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green[600],
+                  backgroundColor: Color(0xFF18542A),
                   foregroundColor: Colors.white,
                   minimumSize: const Size(double.infinity, 48),
                 ),
@@ -287,7 +287,7 @@ class _RecipeDetailState extends State<RecipeDetail> {
           onTap: onTap,
           child: CircleAvatar(
             radius: 28,
-            backgroundColor: Colors.green[600],
+            backgroundColor: Color(0xFF18542A),
             child: Icon(icon, size: 28, color: iconColor ?? Colors.white),
           ),
         ),
@@ -307,17 +307,18 @@ class _RecipeDetailState extends State<RecipeDetail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text('Recipe Detail'),
-        backgroundColor: Colors.green[600],
+        backgroundColor: Color(0xFF18542A),
         foregroundColor: Colors.white,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
         ),
-        actions: [
-          IconButton(icon: const Icon(Icons.more_vert), onPressed: () {}),
-        ],
+        // actions: [
+        //   IconButton(icon: const Icon(Icons.more_vert), onPressed: () {}),
+        // ],
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -529,7 +530,7 @@ class _RecipeDetailState extends State<RecipeDetail> {
                     height: 28,
                     margin: const EdgeInsets.only(right: 12),
                     decoration: BoxDecoration(
-                      color: Colors.green[800],
+                      color: Color(0xFF18542A),
                       borderRadius: BorderRadius.circular(6),
                     ),
                     alignment: Alignment.center,
@@ -568,7 +569,7 @@ class _RecipeDetailState extends State<RecipeDetail> {
         ...items.map(
           (item) => Row(
             children: [
-              const Icon(Icons.check, size: 18, color: Colors.green),
+              const Icon(Icons.check, size: 18, color: Color(0xFF18542A)),
               const SizedBox(width: 8),
               Expanded(child: Text(item)),
             ],

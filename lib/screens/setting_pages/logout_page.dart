@@ -8,19 +8,22 @@ class LogoutPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
+        backgroundColor: Color(0xFF18542A),
         title: const Text('Logged out'),
+        foregroundColor: Colors.white,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back), onPressed: (){
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const SettingsPage()),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const SettingsPage()),
             );
           },
         ),
       ),
-      body: const Center(
-        child: Text('You have loged out')
-      )
+      body: const Center(child: Text('You have loged out')),
     );
-   
   }
 }

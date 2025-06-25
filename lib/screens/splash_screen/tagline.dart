@@ -21,7 +21,7 @@ class _TaglineState extends State<Tagline> with SingleTickerProviderStateMixin {
     super.initState();
 
     _controller = AnimationController(
-      duration: const Duration(milliseconds: 600),
+      duration: const Duration(milliseconds: 500),
       vsync: this,
     );
 
@@ -42,14 +42,14 @@ class _TaglineState extends State<Tagline> with SingleTickerProviderStateMixin {
 
     _controller.forward();
 
-    Future.delayed(const Duration(seconds: 2), () {
+    Future.delayed(const Duration(milliseconds: 1200), () {
       Navigator.of(context).pushReplacement(_createRoute());
     });
   }
 
   Route _createRoute() {
     return PageRouteBuilder(
-      transitionDuration: const Duration(milliseconds: 1000),
+      transitionDuration: const Duration(milliseconds: 600),
       pageBuilder:
           (context, animation, secondaryAnimation) => const WelcomeScreen(),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {

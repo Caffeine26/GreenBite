@@ -15,21 +15,17 @@ class _MyWidgetState extends State<Search> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: Colors.grey.shade300),
+        border: Border.all(color: Colors.grey),
       ),
       child: Row(
         children: [
           Container(
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: Colors.grey.shade200,
+              color: Color(0xFF18542A),
             ),
             padding: const EdgeInsets.all(8),
-            child: const Icon(
-              Icons.search,
-              size: 20,
-              color: Colors.green, // Adjust based on your design
-            ),
+            child: const Icon(Icons.search, size: 20, color: Colors.white),
           ),
           const SizedBox(width: 12),
           const Expanded(

@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:greenbite_app/components/navigation.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../components/RecipePostCard.dart';
 import 'package:greenbite_app/screens/accounts/edit_profile_info.dart';
@@ -39,6 +40,31 @@ class _AccountPageState extends State<AccountPage> {
       'comments': <Map<String, String>>[],
     },
   ];
+  int _selectedIndex = 4; // Community tab selected
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+
+    switch (index) {
+      case 0:
+        Navigator.pushReplacementNamed(context, '/home');
+        break;
+      case 1:
+        Navigator.pushReplacementNamed(context, '/favorite');
+        break;
+      case 2:
+        Navigator.pushReplacementNamed(context, '/upload');
+        break;
+      case 3:
+        Navigator.pushReplacementNamed(context, '/community');
+        break;
+      case 4:
+        Navigator.pushReplacementNamed(context, '/account');
+        break;
+    }
+  }
 
   Future<void> _pickImage() async {
     final picked = await ImagePicker().pickImage(source: ImageSource.gallery);
@@ -75,11 +101,26 @@ class _AccountPageState extends State<AccountPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
+      bottomNavigationBar: Navigation(
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+      ),
+      appBar: AppBar(
+        backgroundColor: Color(0xFF18542A),
+        elevation: 0,
+        title: const Text('Account', style: TextStyle(color: Colors.white)),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Navigator.pushNamed(context, '/home'),
+        ),
+        centerTitle: true,
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
             Container(
-              color: const Color(0xFFEFF4E8),
+              color: Colors.white,
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -105,10 +146,18 @@ class _AccountPageState extends State<AccountPage> {
                                 ),
                               ),
                             ),
-                            const Icon(Icons.settings, size: 22),
+                            IconButton(
+                              icon: const Icon(Icons.settings, size: 22),
+                              onPressed: () {
+                                Navigator.pushReplacementNamed(
+                                  context,
+                                  '/account-edit',
+                                );
+                              },
+                            ),
                           ],
                         ),
-                        const SizedBox(height: 4),
+                        // const SizedBox(height: 4),
                         const Text("kiki_do_u_love_me"),
                         const SizedBox(height: 4),
                         Text("$_postCount Posts    $_score Scores"),
@@ -118,7 +167,7 @@ class _AccountPageState extends State<AccountPage> {
                 ],
               ),
             ),
-            const SizedBox(height: 8),
+            // const SizedBox(height: 8),
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.0),
               child: Text(
@@ -126,7 +175,7 @@ class _AccountPageState extends State<AccountPage> {
                 textAlign: TextAlign.center,
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 12),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -135,7 +184,7 @@ class _AccountPageState extends State<AccountPage> {
                   label: const Text("Add post"),
                   onPressed: _pickImage,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 6, 179, 12),
+                    backgroundColor: const Color(0xFF18542A),
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(
                       horizontal: 16,

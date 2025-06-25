@@ -11,16 +11,16 @@ class RewardsScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: const Color(0xFFEAF7ED),
+        backgroundColor: const Color(0xFF18542A),
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
         centerTitle: true,
         title: const Text(
           'Green Bites Rewards',
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
       ),
       body: ListView(
@@ -62,7 +62,7 @@ class RewardsScreen extends StatelessWidget {
               RewardCard(label: 'Bottle', points: 40, color: Color(0xFFBFFFD7)),
             ],
           ),
-          const SizedBox(height: 3),
+          const SizedBox(height: 20),
           // Exchange Button
           SizedBox(
             width: double.infinity,

@@ -38,6 +38,7 @@ class _AddPhotoPageState extends State<AddPhotoPage> {
           "Upload Recipe",
           style: TextStyle(color: Colors.white),
         ),
+        centerTitle: true,
       ),
       body: Padding(
         padding: const EdgeInsets.all(20),
