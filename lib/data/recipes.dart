@@ -16,7 +16,7 @@ final List<Map<String, dynamic>> recipeList = [
   {
     'image': 'dumpling.jpg',
     'title': 'Xiao Long Bao China Town',
-    'rating': 3,
+    'rating': 4.6,
     'category': 'Vegetarian',
   },
   {

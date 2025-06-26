@@ -30,7 +30,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  share_plus: ^6.3.0 
+  # share_plus: ^6.3.0 
   google_fonts: ^6.1.0 # use the leatest version
   image_picker: ^1.1.0
   image_picker_for_web: ^2.0.7
@@ -76,10 +76,14 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/images/
+#    - assets/images/
     - assets/svg/
-   
-  
+    - assets/images/
+    - assets/images/vegetable.jpg
+    - assets/images/fast_food.jpg
+    - assets/images/on_trend.jpg
+    - assets/images/meat.jpg
+
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
 

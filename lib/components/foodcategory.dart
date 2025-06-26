@@ -9,10 +9,10 @@ class FoodCategory extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        _buildCategory('images/on_trend.jpg', 'On Trend'),
-        _buildCategory('images/meat.jpg', 'Meat'),
-        _buildCategory('images/vegetable.jpg', 'Vegetarian'),
-        _buildCategory('images/fast_food.jpg', 'Fast Food'),
+        _buildCategory('assets/images/on_trend.jpg', 'On Trend'),
+        _buildCategory('assets/images/vegetable.jpg', 'Vegetarian'),
+        _buildCategory('assets/images/meat.jpg', 'Meat'),
+        _buildCategory('assets/images/fast_food.jpg', 'Fast Food'),
       ],
     );
   }
