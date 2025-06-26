@@ -1,4 +1,6 @@
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AddPhotoPage extends StatefulWidget {
   const AddPhotoPage({super.key});
@@ -10,10 +12,9 @@ class AddPhotoPage extends StatefulWidget {
 class _AddPhotoPageState extends State<AddPhotoPage> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descController = TextEditingController();
-  String? selectedImagePath;
+  Uint8List? _selectedImageBytes;
   String? selectedCategory;
 
-  // Predefined categories
   final List<String> categories = [
     'Meat',
     'Vegetarian',
@@ -21,6 +22,43 @@ class _AddPhotoPageState extends State<AddPhotoPage> {
     'On Trend',
     'Uncategorized',
   ];
+
+  Future<void> _pickImage() async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? picked = await picker.pickImage(source: ImageSource.gallery);
+
+    if (picked != null) {
+      final bytes = await picked.readAsBytes();
+      setState(() {
+        _selectedImageBytes = bytes;
+      });
+    }
+  }
+
+  void _submitForm() {
+    if (_selectedImageBytes != null &&
+        _titleController.text.isNotEmpty &&
+        _descController.text.isNotEmpty &&
+        selectedCategory != null) {
+      Navigator.pushReplacementNamed(
+        context,
+        '/upload-step2',
+        arguments: {
+          'image': _selectedImageBytes,
+          'title': _titleController.text,
+          'description': _descController.text,
+          'category': selectedCategory,
+          'rating': 5.0,
+        },
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please fill in all fields, including photo and category.'),
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,10 +72,7 @@ class _AddPhotoPageState extends State<AddPhotoPage> {
             Navigator.pushReplacementNamed(context, '/home');
           },
         ),
-        title: const Text(
-          "Upload Recipe",
-          style: TextStyle(color: Colors.white),
-        ),
+        title: const Text("Upload Recipe", style: TextStyle(color: Colors.white)),
         centerTitle: true,
       ),
       body: Padding(
@@ -45,13 +80,8 @@ class _AddPhotoPageState extends State<AddPhotoPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Image upload box
             GestureDetector(
-              onTap: () {
-                setState(() {
-                  selectedImagePath = 'assets/images/akor.jpg';
-                });
-              },
+              onTap: _pickImage,
               child: Container(
                 height: 150,
                 width: double.infinity,
@@ -60,15 +90,20 @@ class _AddPhotoPageState extends State<AddPhotoPage> {
                   border: Border.all(color: Colors.grey),
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child:
-                    selectedImagePath == null
-                        ? const Center(child: Text("Tap to upload photo"))
-                        : Image.asset(selectedImagePath!, fit: BoxFit.cover),
+                child: _selectedImageBytes == null
+                    ? const Center(child: Text("Tap to upload photo"))
+                    : ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image.memory(
+                          _selectedImageBytes!,
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                        ),
+                      ),
               ),
             ),
 
             const SizedBox(height: 20),
-
             const Text("Recipe Title"),
             TextField(
               controller: _titleController,
@@ -76,43 +111,29 @@ class _AddPhotoPageState extends State<AddPhotoPage> {
             ),
 
             const SizedBox(height: 20),
-
             const Text("Description"),
             TextField(
               controller: _descController,
               maxLines: 3,
-              decoration: const InputDecoration(
-                hintText: "Write a short description",
-              ),
+              decoration: const InputDecoration(hintText: "Write a short description"),
             ),
 
             const SizedBox(height: 20),
-
             const Text("Category"),
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
             DropdownButtonFormField<String>(
               value: selectedCategory,
-              items:
-                  categories
-                      .map(
-                        (cat) => DropdownMenuItem(value: cat, child: Text(cat)),
-                      )
-                      .toList(),
-              onChanged: (value) {
-                setState(() {
-                  selectedCategory = value;
-                });
-              },
+              items: categories
+                  .map((cat) => DropdownMenuItem(value: cat, child: Text(cat)))
+                  .toList(),
+              onChanged: (value) => setState(() => selectedCategory = value),
               decoration: InputDecoration(
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
                 hintText: "Select category",
               ),
             ),
 
             const Spacer(),
-
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
@@ -121,32 +142,7 @@ class _AddPhotoPageState extends State<AddPhotoPage> {
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(vertical: 16),
                 ),
-                onPressed: () {
-                  if (selectedImagePath != null &&
-                      _titleController.text.isNotEmpty &&
-                      _descController.text.isNotEmpty &&
-                      selectedCategory != null) {
-                    Navigator.pushReplacementNamed(
-                      context,
-                      '/upload-step2',
-                      arguments: {
-                        'image': selectedImagePath,
-                        'title': _titleController.text,
-                        'description': _descController.text,
-                        'category': selectedCategory,
-                        'rating': 5.0,
-                      },
-                    );
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text(
-                          'Please fill in all fields, including category',
-                        ),
-                      ),
-                    );
-                  }
-                },
+                onPressed: _submitForm,
                 child: const Text("Next"),
               ),
             ),

@@ -1,14 +1,17 @@
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 
 class Product extends StatefulWidget {
-  final String imageName;
+  final String? imageName; // asset image
+  final Uint8List? imageBytes; // local image
   final String title;
   final double rating;
   final String category;
 
   const Product({
     super.key,
-    required this.imageName,
+    this.imageName,
+    this.imageBytes,
     required this.title,
     required this.rating,
     required this.category,
@@ -30,6 +33,7 @@ class _ProductState extends State<Product> {
           '/recipe-detail',
           arguments: {
             'imageName': widget.imageName,
+            'imageBytes': widget.imageBytes,
             'title': widget.title,
             'rating': widget.rating,
             'category': widget.category,
@@ -44,15 +48,20 @@ class _ProductState extends State<Product> {
             Stack(
               children: [
                 ClipRRect(
-                  borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(16),
-                  ),
-                  child: Image.asset(
-                    'assets/images/${widget.imageName}',
-                    height: 160,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                  ),
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                  child: widget.imageBytes != null
+                      ? Image.memory(
+                          widget.imageBytes!,
+                          height: 160,
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                        )
+                      : Image.asset(
+                          'assets/images/${widget.imageName}',
+                          height: 160,
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                        ),
                 ),
                 Positioned(
                   top: 8,
@@ -81,19 +90,13 @@ class _ProductState extends State<Product> {
                 children: [
                   Text(
                     widget.title,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   Row(
                     children: [
                       const Icon(Icons.star, color: Colors.amber, size: 18),
                       const SizedBox(width: 4),
-                      Text(
-                        widget.rating.toString(),
-                        style: const TextStyle(fontSize: 14),
-                      ),
+                      Text(widget.rating.toString(), style: const TextStyle(fontSize: 14)),
                     ],
                   ),
                 ],

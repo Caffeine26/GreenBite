@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 final List<Map<String, dynamic>> recipeList = [
   {
     'image': 'amok.jpg',

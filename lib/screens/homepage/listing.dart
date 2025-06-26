@@ -6,6 +6,7 @@ import 'package:greenbite_app/components/search.dart';
 import 'package:greenbite_app/components/navigation.dart';
 import 'package:greenbite_app/components/recipe_card.dart';
 import 'package:greenbite_app/data/recipes.dart';
+import 'dart:typed_data';
 
 class Listing extends StatefulWidget {
   const Listing({super.key});
@@ -65,10 +66,8 @@ class _ListingState extends State<Listing> {
               // Dynamically render recipes from recipeList
               ...recipeList.map(
                 (recipe) => Product(
-                  imageName: recipe['image'].toString().replaceFirst(
-                    'assets/images/',
-                    '',
-                  ),
+                  imageName: recipe['image'] is String ? recipe['image'] : null,
+                  imageBytes: recipe['image'] is Uint8List ? recipe['image'] : null,
                   title: recipe['title'],
                   rating: (recipe['rating'] as num).toDouble(),
                   category: recipe['category'],
