@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+
 class SearchPopup extends StatefulWidget {
   const SearchPopup({super.key});
 
@@ -77,9 +78,9 @@ class _SearchPopupState extends State<SearchPopup> {
                       },
                     ),
                   ),
-                  
+
                   const SizedBox(width: 12),
-                  
+
                   // Search Icon
                   GestureDetector(
                     onTap: () {
@@ -91,37 +92,31 @@ class _SearchPopupState extends State<SearchPopup> {
                       size: 24,
                     ),
                   ),
-                  
+
                   const SizedBox(width: 12),
-                  
+
                   // Close Icon
                   GestureDetector(
                     onTap: () {
                       Navigator.pop(context);
                     },
-                    child: Icon(
-                      Icons.close,
-                      color: Colors.grey[600],
-                      size: 24,
-                    ),
+                    child: Icon(Icons.close, color: Colors.grey[600], size: 24),
                   ),
                 ],
               ),
             ),
-            
+
             // Divider
-            Divider(
-              height: 1,
-              color: Colors.grey[300],
-            ),
-            
+            Divider(height: 1, color: Colors.grey[300]),
+
             // Search Results Area (you can customize this)
             Container(
               height: 300,
               padding: const EdgeInsets.all(20),
-              child: _searchController.text.isEmpty
-                  ? _buildEmptyState()
-                  : _buildSearchResults(),
+              child:
+                  _searchController.text.isEmpty
+                      ? _buildEmptyState()
+                      : _buildSearchResults(),
             ),
           ],
         ),
@@ -158,10 +153,7 @@ class _SearchPopupState extends State<SearchPopup> {
         // Add your search results here
         Text(
           'Search results for "${_searchController.text}"',
-          style: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-          ),
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
         ),
         const SizedBox(height: 16),
         // Add actual search result items here
@@ -171,16 +163,14 @@ class _SearchPopupState extends State<SearchPopup> {
 
   void _performSearch(String query) {
     if (query.trim().isEmpty) return;
-    
+
     setState(() {
       // Trigger search results update
     });
-    
+
     // Handle search logic here
     // print('Searching for: $query');
-   
 
-    
     // You can add navigation or other search actions here
     // Navigator.pop(context);
     // Navigator.pushNamed(context, '/search-results', arguments: query);
