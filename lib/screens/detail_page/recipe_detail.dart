@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:greenbite_app/components/SharePopup.dart';
 import 'package:greenbite_app/components/navigation.dart';
 import 'package:greenbite_app/components/review_item.dart';
 import 'package:share_plus/share_plus.dart';
@@ -68,47 +69,9 @@ class _RecipeDetailState extends State<RecipeDetail> {
   }
 
   void _showShareDialog() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return Center(
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(12),
-            child: Container(
-              width: 300,
-              padding: const EdgeInsets.all(20),
-              color: Colors.white,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Text(
-                    'Share on',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 16),
-                  _buildShareOption(Icons.facebook, 'Facebook'),
-                  _buildShareOption(Icons.telegram, 'Telegram'),
-                  _buildShareOption(Icons.camera_alt, 'Instagram'),
-                  _buildShareOption(Icons.alternate_email, 'X (Twitter)'),
-                  _buildShareOption(Icons.message, 'Threads'),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildShareOption(IconData icon, String platform) {
-    return ListTile(
-      leading: Icon(icon, color: Color(0xFF18542A)),
-      title: Text(platform),
-      onTap: () {
-        Navigator.of(context).pop();
-        Share.share('Check out this recipe on GreenBite!');
-      },
-      contentPadding: EdgeInsets.zero,
+  showDialog(
+    context: context,
+    builder: (context) => const SharePopup(),
     );
   }
 
